@@ -1,12 +1,11 @@
 
 
 window.addEventListener('NEOLine.N3.EVENT.READY', () => {
-    console.log('ready')
     const neolineN3 = new NEOLineN3.Init();
     document.getElementById("read").onclick = async () => {
         try {
-            const { value: url } = document.getElementById("exec")
-            console.log(url)
+            const { value } = document.getElementById("exec")
+            const url = new URL(value)
             if (url.protocol !== "n3:") throw 'protocol must be n3!';
             const [_0, _1, sender, _3, scopes, scripthash, method] = url.pathname.match(new RegExp('^//(([a-zA-Z0-9]+)(:(.*))?@)?([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$'));
             const ret = await neolineN3.invokeRead({
@@ -18,16 +17,16 @@ window.addEventListener('NEOLine.N3.EVENT.READY', () => {
             alert(JSON.stringify(ret));
         } catch (err) {
             console.log(err);
-            alert(err);
+            alert(JSON.stringify(err));
         }
     }
     document.getElementById("write").onclick = async () => {
         try {
-            const { value: url } = document.getElementById("exec")
-            console.log(url)
+            const { value } = document.getElementById("exec")
+            const url = new URL(value)
             if (url.protocol !== "n3:") throw 'protocol must be n3!';
             const [_0, _1, sender, _3, scopes, scripthash, method] = url.pathname.match(new RegExp('^//(([a-zA-Z0-9]+)(:(.*))?@)?([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$'));
-            const ret = await neolineN3.invokde({
+            const ret = await neolineN3.invoke({
                 scriptHash: scripthash,
                 operation: method,
                 args: [...url.searchParams].map(([k, v]) => ({ type: k, value: v })),
@@ -36,7 +35,7 @@ window.addEventListener('NEOLine.N3.EVENT.READY', () => {
             alert(JSON.stringify(ret));
         } catch (err) {
             console.log(err);
-            alert(err);
+            alert(JSON.stringify(err));
         }
     }
 });
